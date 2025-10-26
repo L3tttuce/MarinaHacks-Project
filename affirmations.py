@@ -5,7 +5,7 @@ from deepface import DeepFace
 img_path = "input_image.jpg"
 emotion = DeepFace.analyze(img_path = img_path, actions = ['emotion'])
 
-#return affirmations based on emotion detected using pre- made text
+#return affirmations based on emotion detected using pre-made text
 #emotions:  Neutral, Happy, Sad, Angry, Disgust, Surprise
 
 # affirmations 
