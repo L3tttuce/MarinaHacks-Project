@@ -1,5 +1,6 @@
 from typing import List, Tuple, Optional
 from PySide6 import QtCore, QtGui, QtWidgets
+from affirmations import pick_affirmation
 
 import cv2
 
@@ -105,6 +106,7 @@ class CameraWorker(QtCore.QThread):
 class PageThree(QtWidgets.QWidget):
     def __init__(self, stacked_widget: QtWidgets.QStackedWidget):
         super().__init__()
+        self._lastEmo = None
         self.stacked_widget = stacked_widget
         self.worker: Optional[CameraWorker] = None
 
@@ -150,6 +152,19 @@ class PageThree(QtWidgets.QWidget):
         """)
         root.addWidget(self.videoLabel, alignment=QtCore.Qt.AlignCenter)
 
+        # Affirmation
+        self.affirmLabel = QtWidgets.QLabel("")
+        self.affirmLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.affirmLabel.setWordWrap(True)
+        self.affirmLabel.setStyleSheet("""
+                    color: #e6f3ff;
+                    padding: 8px 12px;
+                    border: 1px solid rgba(255,255,255,0.08);
+                    border-radius: 10px;
+                    background: rgba(255,255,255,0.04);
+                    font-size: 16px;
+                """)
+        root.addWidget(self.affirmLabel)
 
         # Status line
         self.statusLine = QtWidgets.QLabel("")
@@ -171,6 +186,7 @@ class PageThree(QtWidgets.QWidget):
         self.worker.lastEmotion.connect(self.on_emotion)
         self.worker.start()
         self.statusLine.setText("Starting camera…")
+        self.affirmLabel.setText(pick_affirmation("neutral"))
 
     def stop_camera(self):
         if self.worker:
@@ -192,4 +208,7 @@ class PageThree(QtWidgets.QWidget):
     @QtCore.Slot(str, int)
     def on_emotion(self, emo: str, conf: int):
         self.statusLine.setText(f"Detected: {emo or 'unknown'} ({conf}%)")
+        if emo and emo != self._lastEmo:
+            self.affirmLabel.setText(pick_affirmation(emo))
+            self._lastEmo = emo
 

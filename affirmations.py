@@ -19,22 +19,30 @@ surprised_affirmation = ['How I express my emotions is my responsibility.', 'I a
 
 # Returns random affirmation based on emotion detected
 # Neutral expression detected
-if  emotion == ['happy']:
-    print(random.choice(happy_affirmation))
-# Happy expression detected 
-elif emotion == ['surprised']:
-    print(random.choice(surprised_affirmation))
-# Sad expression detected
-elif emotion == ['sad']:
-    print(random.choice(sad_affirmation))
-# Angry expression detected
-elif emotion == ['angry']:
-    print(random.choice(angry_affirmation))
-# Disgust expression detected
-elif emotion == ['disgust']:
-    print(random.choice(disgust_affirmation))
-# Surprise expression detected 
-else:
-    print(random.choice(neutral_affirmation)) 
+def pick_affirmation(emotion: str) -> str:
+    if  emotion == ['happy']:
+        #print(random.choice(happy_affirmation))
+        return random.choice(happy_affirmation)
+    # Happy expression detected
+    elif emotion == ['surprised']:
+        #print(random.choice(surprised_affirmation))
+        return random.choice(surprised_affirmation)
+    # Sad expression detected
+    elif emotion == ['sad']:
+        #print(random.choice(sad_affirmation))
+        return random.choice(sad_affirmation)
+    # Angry expression detected
+    elif emotion == ['angry']:
+        #print(random.choice(angry_affirmation))
+        return random.choice(angry_affirmation)
+    # Disgust expression detected
+    elif emotion == ['disgust']:
+        #print(random.choice(disgust_affirmation))
+        return random.choice(disgust_affirmation)
+    # Surprise expression detected
+    else:
+        #print(random.choice(neutral_affirmation))
+        return random.choice(neutral_affirmation)
+
 
     
