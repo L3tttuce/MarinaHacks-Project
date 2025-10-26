@@ -95,8 +95,9 @@ class PageOne(QtWidgets.QWidget):
 
     @QtCore.Slot()
     def cam(self):
-        subprocess.Popen([sys.executable, "-u", "realTimeFaceDetection.py"])
+        self.stacked_widget.setCurrentIndex(2)
 
     @QtCore.Slot()
     def breathe(self):
         self.stacked_widget.setCurrentIndex(1)
+        

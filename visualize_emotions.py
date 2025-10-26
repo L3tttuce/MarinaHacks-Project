@@ -103,7 +103,7 @@ def main():
 
     # 1) retrieve data
     df = make_dataset()
-    #df = make_dummy()
+    df = make_dummy()
     if df.empty:
         print("[Error] Dummy generation failed.")
         sys.exit(1)
