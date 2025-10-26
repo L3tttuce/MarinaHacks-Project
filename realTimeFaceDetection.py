@@ -1,11 +1,14 @@
-import cv2
+import cv2, traceback, textwrap
+from affirmations import giveAffirmation
 from typing import List, Tuple
-
+from logEmotion import LogEmotion
 try:
     from deepface import DeepFace
     HAVE_DEEPFACE = True
 except Exception:
     DeepFace = None
+    print("DeepFace import failed:")
+    traceback.print_exc()
     HAVE_DEEPFACE = False
 
 ANALYZE_EVERY = 5  
@@ -42,6 +45,7 @@ def run():
 
     frame_idx = 0
     last_emotions: List[Tuple[str, float]] = []
+    logger = LogEmotion("stats.json")
 
     try:
         while True:
@@ -62,6 +66,9 @@ def run():
                         emo = res.get("dominant_emotion")
                         conf = max(res.get("emotion", {}).values()) / 100.0 if "emotion" in res else 0.0
                         last_emotions.append((emo, conf))
+                        
+                        if emo and conf > 0:
+                            logger.appendJSON("camera", emo, int(round(conf)))
                     except Exception:
                         last_emotions.append((None, None))
             for i, (x, y, w, h) in enumerate(faces):

@@ -87,7 +87,7 @@ class PageOne(QtWidgets.QWidget):
     # Slots
     @QtCore.Slot()
     def write_log(self):
-        QtWidgets.QMessageBox.information(self, "Log", "This is where you’d open a log window or save text.")
+        subprocess.Popen([sys.executable, "-u", "visualize_emotions.py"])
 
     @QtCore.Slot()
     def emotion(self):

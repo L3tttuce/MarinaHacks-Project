@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import argparse
 import sys
+import logEmotion
 
 def parse_args():
     p = argparse.ArgumentParser(description="Dummy visualization of emotions over dates with optional date filter.")
@@ -12,6 +13,41 @@ def parse_args():
     p.add_argument("--days", type=int, default=20, help="Number of days for dummy data (default: 20)")
     return p.parse_args()
 
+def loadStats(logger) -> pd.DataFrame:
+    raw = logger.loadJSON()
+    if not raw:
+        return pd.DataFrame(columns=["date", "label", "score"])
+    df = pd.DataFrame(raw)
+    required = {"datetime", "emotion", "percentage"}
+    missing = required - set(df.columns)
+    if missing:
+        print("missing fields in json")
+        return pd.DataFrame(columns=["date", "label", "score"])
+
+    df["date"] = pd.to_datetime(df["datetime"], errors="coerce").dt.normalize()
+    df = df.rename(columns={"emotion": "label", "percentage": "score"})
+    df["score"] = pd.to_numeric(df["score"], errors="coerce")
+    df = df.dropna(subset=["date", "label", "score"])
+    df = df[["date", "label", "score"]]
+    return df
+
+def make_dataset(days: int = 20) -> pd.DataFrame:
+    logger = logEmotion.LogEmotion("stats.json")
+    rawData = logger.loadJSON()
+    df = pd.DataFrame(rawData)
+    validInput = {"datetime", "emotion", "percentage"}
+    invalidInput = validInput - set(df.columns)
+    if not invalidInput:
+        df["date"] = pd.to_datetime(df["datetime"], errors="coerce", format="%Y-%m-%d").dt.normalize()
+        df = df.rename(columns={"emotion": "label", "percentage": "score"})
+        df["score"] = pd.to_numeric(df["score"], errors="coerce")
+        df = df.dropna(subset=["date", "label", "score"])
+        df = df[["date", "label", "score"]]
+        return df
+    else:
+        print("error loading stats")
+
+    #dummy set as fallback
 def make_dummy(days: int = 20) -> pd.DataFrame:
     np.random.seed(42)
     dates = pd.date_range(datetime.today().date() - timedelta(days=days-1), periods=days, freq="D")
@@ -65,8 +101,9 @@ def apply_date_filter(df: pd.DataFrame, start: str | None, end: str | None) -> p
 def main():
     args = parse_args()
 
-    # 1) Dummy data
-    df = make_dummy(days=args.days)
+    # 1) retrieve data
+    df = make_dataset()
+    #df = make_dummy()
     if df.empty:
         print("[Error] Dummy generation failed.")
         sys.exit(1)

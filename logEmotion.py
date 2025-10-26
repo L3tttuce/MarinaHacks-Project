@@ -24,7 +24,7 @@ class LogEmotion:
     def appendJSON(self, name, emotion, percentage):
         entry = {
             "name": name,
-            "datetime": datetime.datetime.now().isoformat(),
+            "datetime": datetime.datetime.today().strftime("%Y-%m-%d"),
             "emotion": emotion,
             "percentage": percentage
         }
@@ -39,5 +39,11 @@ def test():
 
     logger.appendJSON("Bobby", "happy", 66)
     logger.appendJSON("Fat baby", "sad", 60)
+    load = logger.loadJSON()
+    print(str(load))
+    name = load[1]
+    print(name)
+
+    print(str(load[1]["name"]))
 
 #test()
