@@ -2,6 +2,7 @@ import sys
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QStackedWidget
 from page_one import PageOne
 from page_two import PageTwo
+from page_three import PageThree
 
 APP_STYLES = """
 * { font-family: Inter, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
@@ -58,9 +59,11 @@ class MainWindow(QWidget):
         self.stacked = QStackedWidget()
         self.page1 = PageOne(self.stacked)
         self.page2 = PageTwo(self.stacked)
+        self.page3 = PageThree(self.stacked)
 
         self.stacked.addWidget(self.page1)  # index 0
         self.stacked.addWidget(self.page2)  # index 1
+        self.stacked.addWidget(self.page3)  # index 2
 
         layout.addWidget(self.stacked)
         self.setLayout(layout)
